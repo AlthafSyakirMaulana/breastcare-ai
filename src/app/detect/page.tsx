@@ -5,12 +5,16 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function DetectPage() {
   const router = useRouter();
   const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -20,6 +24,8 @@ export default function DetectPage() {
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
+    setImageFile(file);
+    setError(null);
     const reader = new FileReader();
     reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
@@ -52,45 +58,63 @@ export default function DetectPage() {
 
   const removeImage = () => {
     setImage(null);
+    setImageFile(null);
+    setError(null);
     localStorage.removeItem("breastcare_image");
   };
 
-  const analyzeImage = () => {
+  const analyzeImage = async () => {
+    if (!imageFile) return;
+
     setIsAnalyzing(true);
     setProgress(0);
+    setError(null);
 
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + Math.random() * 15 + 5;
+        if (prev >= 90) return prev;
+        return prev + Math.random() * 10 + 2;
       });
     }, 300);
 
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      const res = await fetch(`${API_URL}/predict`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Gagal mendapatkan hasil analisis");
+
+      const data = await res.json();
+
       clearInterval(interval);
       setProgress(100);
 
-      const results = [
-        { label: "Normal", confidence: 0.92, color: "emerald" },
-        { label: "Jinak", confidence: 0.05, color: "amber" },
-        { label: "Ganas", confidence: 0.03, color: "rose" },
-      ];
-
-      const topResult = results.reduce((a, b) =>
-        a.confidence > b.confidence ? a : b
-      );
-
       localStorage.setItem(
         "breastcare_result",
-        JSON.stringify({ results, topResult, timestamp: new Date().toISOString() })
+        JSON.stringify({
+          results: data.all_results,
+          topResult: data.all_results.reduce((a: any, b: any) =>
+            a.confidence > b.confidence ? a : b
+          ),
+          timestamp: new Date().toISOString(),
+          maskBase64: data.mask_base64,
+          lesionRatio: data.lesion_ratio,
+        })
       );
 
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        router.push("/result");
+      }, 500);
+    } catch (err: any) {
+      clearInterval(interval);
       setIsAnalyzing(false);
-      router.push("/result");
-    }, 3000);
+      setError(err.message || "Terjadi kesalahan saat menganalisis");
+    }
   };
 
   return (
@@ -246,6 +270,12 @@ export default function DetectPage() {
                       "Analisis Gambar"
                     )}
                   </button>
+
+                  {error && (
+                    <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+                      {error}
+                    </div>
+                  )}
 
                   {isAnalyzing && (
                     <div className="mt-4">

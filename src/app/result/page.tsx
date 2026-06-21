@@ -8,13 +8,14 @@ import Footer from "@/components/Footer";
 interface ResultItem {
   label: string;
   confidence: number;
-  color: string;
 }
 
 interface ResultData {
   results: ResultItem[];
   topResult: ResultItem;
   timestamp: string;
+  maskBase64?: string;
+  lesionRatio?: number;
 }
 
 export default function ResultPage() {
@@ -22,6 +23,7 @@ export default function ResultPage() {
   const [result, setResult] = useState<ResultData | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [showMask, setShowMask] = useState(false);
 
   useEffect(() => {
     const savedResult = localStorage.getItem("breastcare_result");
@@ -266,6 +268,37 @@ export default function ResultPage() {
                       </div>
                     );
                   })}
+
+                  {result.maskBase64 && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <button
+                        onClick={() => setShowMask(!showMask)}
+                        className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        {showMask ? "Sembunyikan" : "Lihat"} Segmentasi Area Lesi
+                      </button>
+
+                      {showMask && (
+                        <div className="mt-3">
+                          <img
+                            src={`data:image/png;base64,${result.maskBase64}`}
+                            alt="Segmentation Mask"
+                            className="w-full max-w-xs rounded-xl border border-gray-200"
+                          />
+                          <p className="text-xs text-gray-400 mt-2">
+                            Area putih menunjukkan region yang terdeteksi sebagai lesi
+                            {result.lesionRatio !== undefined && (
+                              <> — Rasio lesi: {(result.lesionRatio * 100).toFixed(1)}%</>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
