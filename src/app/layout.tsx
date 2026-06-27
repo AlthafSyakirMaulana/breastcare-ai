@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BreastCare AI - Deteksi Dini Kanker Payudara",
+  title: "BERSERI - Breast Early Risk Screening Intelligence",
   description:
-    "Platform deteksi dini kanker payudara berbasis Artificial Intelligence untuk mendukung Transformasi Kesehatan Nasional",
+    "BERSERI - Breast Early Risk Screening Intelligence: Platform deteksi dini kanker payudara berbasis Artificial Intelligence",
 };
 
 export default function RootLayout({

@@ -16,18 +16,21 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </div>
-            <span className="text-xl font-bold gradient-text">BreastCare AI</span>
+            <span className="text-xl font-bold gradient-text">BERSERI</span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
               Beranda
             </Link>
-            <Link href="/#fitur" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
-              Fitur
+            <Link href="/screening" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
+              Screening Center
             </Link>
-            <Link href="/#cara-kerja" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
-              Cara Kerja
+            <Link href="/patient" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
+              Patient Track
+            </Link>
+            <Link href="/educare" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
+              EduCare 2045
             </Link>
             <Link
               href="/detect"
@@ -51,17 +54,20 @@ export default function Navbar() {
           </button>
         </div>
 
-        {mobileOpen && (
+          {mobileOpen && (
           <div className="md:hidden pb-4 animate-slide-up">
             <div className="flex flex-col gap-3 pt-2">
               <Link href="/" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
                 Beranda
               </Link>
-              <Link href="/#fitur" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
-                Fitur
+              <Link href="/screening" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
+                Screening Center
               </Link>
-              <Link href="/#cara-kerja" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
-                Cara Kerja
+              <Link href="/patient" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
+                Patient Track
+              </Link>
+              <Link href="/educare" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
+                EduCare 2045
               </Link>
               <Link
                 href="/detect"

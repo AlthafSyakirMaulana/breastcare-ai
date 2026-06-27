@@ -12,22 +12,22 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <span className="text-xl font-bold text-white">BreastCare AI</span>
+              <span className="text-xl font-bold text-white">BERSERI</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-md">
-              Platform deteksi dini kanker payudara berbasis Artificial Intelligence.
-              Mendukung Transformasi Kesehatan Nasional melalui inovasi teknologi
-              untuk deteksi yang cepat, akurat, dan terjangkau.
+              Breast Early Risk Screening Intelligence — Platform deteksi dini kanker payudara
+              berbasis Artificial Intelligence. Mendukung Transformasi Kesehatan Nasional
+              melalui inovasi teknologi untuk deteksi yang cepat, akurat, dan terjangkau.
             </p>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Navigasi</h3>
+            <h3 className="text-white font-semibold mb-4">Layanan</h3>
             <div className="flex flex-col gap-2">
-              <Link href="/" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Beranda</Link>
-              <Link href="/detect" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Deteksi</Link>
-              <Link href="/#fitur" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Fitur</Link>
-              <Link href="/#cara-kerja" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Cara Kerja</Link>
+              <Link href="/screening" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Screening Center</Link>
+              <Link href="/patient" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Patient Track</Link>
+              <Link href="/educare" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">EduCare 2045</Link>
+              <Link href="/detect" className="text-sm text-gray-400 hover:text-pink-400 transition-colors">Deteksi Cepat</Link>
             </div>
           </div>
 
@@ -43,7 +43,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} BreastCare AI. All rights reserved.
+            &copy; {new Date().getFullYear()} BERSERI. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500">Dukung Transformasi Kesehatan Nasional</span>
