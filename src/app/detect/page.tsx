@@ -19,7 +19,19 @@ export default function DetectPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem("breastcare_image");
-    if (saved) setImage(saved);
+    if (saved) {
+      setImage(saved);
+      const mimeMatch = saved.match(/^data:(image\/\w+);base64,/);
+      const mime = mimeMatch ? mimeMatch[1] : "image/png";
+      const ext = mime.split("/")[1] || "png";
+      fetch(saved)
+        .then((r) => r.blob())
+        .then((blob) => {
+          const file = new File([blob], `restored-ultrasound.${ext}`, { type: mime });
+          setImageFile(file);
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const handleFile = (file: File) => {
@@ -249,9 +261,9 @@ export default function DetectPage() {
 
                   <button
                     onClick={analyzeImage}
-                    disabled={!image || isAnalyzing}
+                    disabled={!imageFile || isAnalyzing}
                     className={`w-full py-3 rounded-xl text-base font-semibold text-white transition-all ${
-                      !image
+                      !imageFile
                         ? "bg-gray-300 cursor-not-allowed"
                         : isAnalyzing
                         ? "gradient-bg opacity-80 cursor-wait"
