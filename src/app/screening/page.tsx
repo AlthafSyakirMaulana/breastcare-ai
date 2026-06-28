@@ -13,7 +13,6 @@ export default function ScreeningPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -21,9 +20,12 @@ export default function ScreeningPage() {
     if (!file.type.startsWith("image/")) return;
     setImageFile(file);
     setError(null);
-    setResult(null);
     const reader = new FileReader();
-    reader.onload = (e) => setImage(e.target?.result as string);
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      setImage(dataUrl);
+      localStorage.setItem("breastcare_image", dataUrl);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -44,7 +46,20 @@ export default function ScreeningPage() {
       const res = await fetch(`${API_URL}/predict`, { method: "POST", body: formData });
       if (!res.ok) throw new Error("Gagal mendapatkan hasil analisis");
       const data = await res.json();
-      setResult(data);
+      localStorage.setItem(
+        "breastcare_result",
+        JSON.stringify({
+          results: data.all_results,
+          topResult: data.all_results.reduce((a: any, b: any) =>
+            a.confidence > b.confidence ? a : b
+          ),
+          timestamp: new Date().toISOString(),
+          maskBase64: data.mask_base64,
+          overlayBase64: data.overlay_base64,
+          lesionRatio: data.lesion_ratio,
+        })
+      );
+      router.push("/result");
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan");
     } finally {
@@ -74,7 +89,7 @@ export default function ScreeningPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="animate-slide-up stagger-1">
+              <div className="animate-slide-up stagger-1 lg:col-span-2 max-w-xl mx-auto w-full">
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                   <h2 className="text-lg font-semibold text-gray-800 mb-4">Upload Citra USG</h2>
                   {!image ? (
@@ -102,7 +117,7 @@ export default function ScreeningPage() {
                   ) : (
                     <div className="relative rounded-xl overflow-hidden border border-gray-200">
                       <img src={image} alt="Preview" className="w-full h-64 object-contain bg-gray-50" />
-                      <button onClick={() => { setImage(null); setImageFile(null); setResult(null); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
+                      <button onClick={() => { setImage(null); setImageFile(null); localStorage.removeItem("breastcare_image"); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -112,9 +127,9 @@ export default function ScreeningPage() {
 
                   <button
                     onClick={analyzeImage}
-                    disabled={!image || isAnalyzing}
+                    disabled={!imageFile || isAnalyzing}
                     className={`w-full mt-4 py-3 rounded-xl text-base font-semibold text-white transition-all ${
-                      !image ? "bg-gray-300 cursor-not-allowed" : isAnalyzing ? "gradient-bg opacity-80 cursor-wait" : "gradient-bg hover:opacity-90 hover:shadow-lg active:scale-[0.98]"
+                      !imageFile ? "bg-gray-300 cursor-not-allowed" : isAnalyzing ? "gradient-bg opacity-80 cursor-wait" : "gradient-bg hover:opacity-90 hover:shadow-lg active:scale-[0.98]"
                     }`}
                   >
                     {isAnalyzing ? "Menganalisis..." : "Analisis dengan AI"}
@@ -122,62 +137,6 @@ export default function ScreeningPage() {
 
                   {error && (
                     <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">{error}</div>
-                  )}
-                </div>
-              </div>
-
-              <div className="animate-slide-up stagger-2">
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                  <h2 className="text-lg font-semibold text-gray-800 mb-4">Hasil Analisis</h2>
-                  {result ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
-                        <span className="text-sm font-medium text-gray-600">Klasifikasi</span>
-                        <span className={`px-4 py-1.5 rounded-full text-sm font-bold text-white ${
-                          result.prediction === "Normal" ? "bg-emerald-500" : result.prediction === "Jinak" ? "bg-amber-500" : "bg-rose-500"
-                        }`}>
-                          {result.prediction}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
-                        <span className="text-sm font-medium text-gray-600">Confidence Score</span>
-                        <span className="text-lg font-bold gradient-text">{(result.confidence * 100).toFixed(1)}%</span>
-                      </div>
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
-                        <span className="text-sm font-medium text-gray-600">Rasio Lesi</span>
-                        <span className="text-sm font-semibold text-gray-700">{(result.lesion_ratio * 100).toFixed(1)}%</span>
-                      </div>
-
-                      <div className="border-t border-gray-100 pt-4">
-                        <h3 className="text-sm font-semibold text-gray-700 mb-3">Detail Per Kelas</h3>
-                        {result.all_results?.map((item: any, i: number) => (
-                          <div key={i} className="flex items-center gap-3 mb-2">
-                            <span className="w-20 text-sm text-gray-600">{item.label}</span>
-                            <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                              <div className={`h-full rounded-full ${
-                                item.label === "Normal" ? "bg-emerald-500" : item.label === "Jinak" ? "bg-amber-500" : "bg-rose-500"
-                              }`} style={{ width: `${(item.confidence * 100).toFixed(1)}%` }} />
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700 w-14 text-right">{(item.confidence * 100).toFixed(1)}%</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {result.mask_base64 && (
-                        <div className="border-t border-gray-100 pt-4">
-                          <h3 className="text-sm font-semibold text-gray-700 mb-3">Segmentasi Lesi</h3>
-                          <img src={`data:image/png;base64,${result.mask_base64}`} alt="Segmentation Mask" className="w-full max-w-xs rounded-xl border border-gray-200" />
-                          <p className="text-xs text-gray-400 mt-2">Area putih menunjukkan region yang terdeteksi sebagai lesi</p>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-                      <svg className="w-16 h-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <p className="text-sm">Upload citra dan klik analisis untuk melihat hasil</p>
-                    </div>
                   )}
                 </div>
               </div>
