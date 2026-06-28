@@ -114,6 +114,7 @@ export default function DetectPage() {
           ),
           timestamp: new Date().toISOString(),
           maskBase64: data.mask_base64,
+          overlayBase64: data.overlay_base64,
           lesionRatio: data.lesion_ratio,
         })
       );

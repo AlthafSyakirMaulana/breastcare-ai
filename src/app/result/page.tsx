@@ -15,6 +15,7 @@ interface ResultData {
   topResult: ResultItem;
   timestamp: string;
   maskBase64?: string;
+  overlayBase64?: string;
   lesionRatio?: number;
 }
 
@@ -23,7 +24,7 @@ export default function ResultPage() {
   const [result, setResult] = useState<ResultData | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [showMask, setShowMask] = useState(false);
+  const [showSegmentation, setShowSegmentation] = useState(false);
 
   useEffect(() => {
     const savedResult = localStorage.getItem("breastcare_result");
@@ -116,6 +117,32 @@ export default function ResultPage() {
     }
   };
 
+  const getResultHeading = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "normal":
+        return "Hasil model mengarah pada kategori Normal";
+      case "jinak":
+        return "Hasil model mengarah pada kategori Jinak";
+      case "ganas":
+        return "Hasil model mengarah pada kategori Ganas";
+      default:
+        return "Hasil analisis model";
+    }
+  };
+
+  const getExplanation = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "normal":
+        return "Pola pada citra ini lebih konsisten dengan karakteristik Normal. Hasil perlu ditinjau bersama pemeriksaan klinis oleh tenaga kesehatan.";
+      case "jinak":
+        return "Pola pada citra ini lebih konsisten dengan karakteristik Jinak (Benign). Hasil perlu ditinjau bersama pemeriksaan klinis oleh tenaga kesehatan.";
+      case "ganas":
+        return "Pola pada citra ini lebih konsisten dengan karakteristik Ganas (Malignant). Hasil perlu ditinjau bersama pemeriksaan klinis oleh tenaga kesehatan.";
+      default:
+        return "Hasil perlu ditinjau bersama pemeriksaan klinis oleh tenaga kesehatan.";
+    }
+  };
+
   const getRecommendation = (label: string) => {
     switch (label.toLowerCase()) {
       case "normal":
@@ -131,7 +158,7 @@ export default function ResultPage() {
         };
       case "jinak":
         return {
-          title: "Terindikasi Jinak (Benign)",
+          title: "Hasil model mengarah pada kategori Jinak",
           desc: "AI mendeteksi adanya massa yang memiliki karakteristik jinak (non-kanker). Meskipun demikian, diperlukan pemeriksaan lebih lanjut oleh tenaga medis untuk konfirmasi.",
           steps: [
             "Segera konsultasikan hasil ini dengan dokter spesialis",
@@ -142,7 +169,7 @@ export default function ResultPage() {
         };
       case "ganas":
         return {
-          title: "Terindikasi Ganas (Malignant)",
+          title: "Hasil model mengarah pada kategori Ganas",
           desc: "AI mendeteksi adanya pola yang mengindikasikan massa ganas (kanker). Hasil ini memerlukan tindakan medis segera untuk diagnosis dan penanganan lebih lanjut.",
           steps: [
             "Segera konsultasi dengan dokter spesialis onkologi",
@@ -207,34 +234,34 @@ export default function ResultPage() {
                   </div>
 
                   <h2 className={`text-2xl font-bold ${colors.text} mb-2`}>
-                    {recommendation.title}
+                    {getResultHeading(result.topResult.label)}
                   </h2>
 
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    {recommendation.desc}
+                    {getExplanation(result.topResult.label)}
                   </p>
 
                   {/* Confidence Badge */}
                   <div className="mt-4 flex items-center gap-3 justify-center md:justify-start">
                     <span className={`px-4 py-1.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r ${colors.gradient} ${colors.shadow} shadow-md`}>
-                      {(result.topResult.confidence * 100).toFixed(1)}% Keyakinan
+                      Keyakinan prediksi model: {(result.topResult.confidence * 100).toFixed(1).replace(".", ",")}%
                     </span>
                     <span className="text-xs text-gray-400">
-                      Level Kepercayaan AI
+                      Confidence score
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Confidence Breakdown */}
+            {/* Probability Breakdown */}
             <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm mb-6 animate-slide-up stagger-2">
               <button
                 onClick={() => setShowDetails(!showDetails)}
                 className="w-full flex items-center justify-between"
               >
                 <h3 className="text-lg font-semibold text-gray-800">
-                  Detail Analisis
+                  Probabilitas Kategori oleh Model
                 </h3>
                 <svg
                   className={`w-5 h-5 text-gray-400 transition-transform ${showDetails ? "rotate-180" : ""}`}
@@ -269,36 +296,54 @@ export default function ResultPage() {
                     );
                   })}
 
-                  {result.maskBase64 && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <button
-                        onClick={() => setShowMask(!showMask)}
-                        className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        {showMask ? "Sembunyikan" : "Lihat"} Segmentasi Area Lesi
-                      </button>
+                  {/* Segmentation Section */}
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <button
+                      onClick={() => setShowSegmentation(!showSegmentation)}
+                      aria-expanded={showSegmentation}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      {showSegmentation ? "Sembunyikan" : "Tampilkan"} Area Perhatian pada Citra USG
+                    </button>
 
-                      {showMask && (
-                        <div className="mt-3">
-                          <img
-                            src={`data:image/png;base64,${result.maskBase64}`}
-                            alt="Segmentation Mask"
-                            className="w-full max-w-xs rounded-xl border border-gray-200"
-                          />
-                          <p className="text-xs text-gray-400 mt-2">
-                            Area putih menunjukkan region yang terdeteksi sebagai lesi
-                            {result.lesionRatio !== undefined && (
-                              <> — Rasio lesi: {(result.lesionRatio * 100).toFixed(1)}%</>
-                            )}
+                    {showSegmentation && (
+                      <div className="mt-4 space-y-4">
+                        {result.overlayBase64 || result.maskBase64 ? (
+                          <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <p className="text-xs font-medium text-gray-500 mb-2">Citra USG asli</p>
+                                <img
+                                  src={image}
+                                  alt="Citra USG asli"
+                                  className="w-full rounded-xl border border-gray-200"
+                                />
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-gray-500 mb-2">Overlay area perhatian model</p>
+                                <img
+                                  src={result.overlayBase64 ? `data:image/png;base64,${result.overlayBase64}` : `data:image/png;base64,${result.maskBase64}`}
+                                  alt="Overlay segmentasi"
+                                  className="w-full rounded-xl border border-gray-200"
+                                />
+                              </div>
+                            </div>
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                              Area berwarna menunjukkan bagian citra yang menjadi perhatian model dan perlu ditinjau tenaga kesehatan. Visualisasi ini bukan batas lesi klinis yang pasti.
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-sm text-gray-400">
+                            Visualisasi area perhatian belum tersedia untuk citra ini.
                           </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -308,6 +353,7 @@ export default function ResultPage() {
               <h3 className="text-lg font-semibold text-gray-800 mb-4">
                 Rekomendasi Tindakan
               </h3>
+              <p className="text-sm text-gray-500 mb-4">{recommendation.desc}</p>
               <ul className="space-y-3">
                 {recommendation.steps.map((step, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -331,7 +377,8 @@ export default function ResultPage() {
                   <p className="text-sm text-amber-700 leading-relaxed">
                     Hasil deteksi ini bersifat indikatif dan merupakan alat bantu awal. Hasil ini BUKAN merupakan
                     diagnosis medis resmi. Selalu konsultasikan hasil ini dengan dokter spesialis untuk mendapatkan
-                    diagnosis dan penanganan yang tepat.
+                    diagnosis dan penanganan yang tepat. BERSERI adalah purwarupa pendukung skrining dan tidak boleh
+                    digunakan sebagai dasar keputusan pengobatan secara mandiri.
                   </p>
                 </div>
               </div>
