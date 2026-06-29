@@ -156,7 +156,7 @@ export default function Home() {
             <div className="flex justify-center gap-8">
               {[
                 { value: "85%", label: "Akurasi" },
-                { value: "< 2", label: "Menit Proses" },
+                { value: "< 1", label: "Menit Proses" },
                 { value: "3", label: "Kelas Deteksi" },
               ].map((stat, i) => (
                 <div key={i} className="text-center animate-slide-up" style={{ animationDelay: `${i * 0.1}s` }}>
