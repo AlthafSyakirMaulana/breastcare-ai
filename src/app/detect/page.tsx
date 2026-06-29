@@ -303,7 +303,7 @@ export default function DetectPage() {
                         />
                       </div>
                       <p className="text-xs text-gray-400 mt-2 text-center">
-                        AI sedang menganalisis pola citra mammografi...
+                        AI (Deep Learning) sedang menganalisis pola citra mammografi...
                       </p>
                     </div>
                   )}

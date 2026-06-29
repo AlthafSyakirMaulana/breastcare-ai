@@ -61,7 +61,7 @@ export default function Home() {
               <div className="space-y-8">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-100 text-pink-700 text-sm font-medium animate-fade-in">
                   <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse-soft" />
-                  Berbasis AI untuk Transformasi Kesehatan Nasional
+                  Berbasis AI dengan Pendekatan Deep Learning untuk Transformasi Kesehatan Nasional
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight animate-slide-up stagger-1">
@@ -73,7 +73,7 @@ export default function Home() {
                 </h1>
 
                 <p className="text-lg text-gray-600 leading-relaxed max-w-lg animate-slide-up stagger-2">
-                  Platform berbasis AI yang membantu tenaga medis dan masyarakat
+                  Platform berbasis AI (Deep Learning) yang membantu tenaga medis dan masyarakat
                   dalam mendeteksi potensi kanker payudara melalui analisis citra
                   mammografi dengan cepat, akurat, dan mudah digunakan.
                 </p>
@@ -91,29 +91,6 @@ export default function Home() {
                   >
                     Pelajari Lebih Lanjut
                   </a>
-                </div>
-
-                <div className="flex items-center gap-8 pt-4 animate-slide-up stagger-4">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-10 h-10 rounded-full border-2 border-white bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center text-xs font-bold text-gray-700"
-                      >
-                        {String.fromCharCode(64 + i)}
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <p className="text-sm text-gray-500">Dipercaya oleh 10.000+ pengguna</p>
-                  </div>
                 </div>
               </div>
 
@@ -176,11 +153,10 @@ export default function Home() {
         {/* Stats Section */}
         <section className="py-16 bg-white border-y border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex justify-center gap-8">
               {[
-                { value: "95%", label: "Tingkat Akurasi" },
-                { value: "10K+", label: "Pengguna Aktif" },
-                { value: "< 5", label: "Menit Proses" },
+                { value: "85%", label: "Akurasi" },
+                { value: "< 2", label: "Menit Proses" },
                 { value: "3", label: "Kelas Deteksi" },
               ].map((stat, i) => (
                 <div key={i} className="text-center animate-slide-up" style={{ animationDelay: `${i * 0.1}s` }}>
@@ -290,8 +266,8 @@ export default function Home() {
                 },
                 {
                   step: "02",
-                  title: "Analisis AI",
-                  desc: "Sistem AI kami akan menganalisis citra dan mendeteksi pola yang mengindikasikan abnormalitas.",
+                  title: "Analisis AI (Deep Learning)",
+                  desc: "Model AI (Deep Learning) kami akan menganalisis citra dan mendeteksi pola yang mengindikasikan abnormalitas.",
                   color: "from-purple-500 to-purple-600",
                   shadow: "shadow-purple-200",
                 },
