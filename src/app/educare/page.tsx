@@ -77,52 +77,56 @@ export default function EduCarePage() {
               <div className="p-6 sm:p-8">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Forecast Menuju 2045</h2>
                 <p className="text-sm text-gray-500 mb-4">
-                  Berdasarkan estimasi historis IHME-GBD, jumlah kasus baru dan kematian diproyeksikan menggunakan model ARIMA untuk memberikan gambaran beban layanan yang perlu diantisipasi. Forecast ini adalah skenario perencanaan, bukan angka pasti.
+                  Berdasarkan data historis IHME (1990–2023), tim EduCare memproyeksikan jumlah kasus baru dan kematian hingga 2045 menggunakan model ARIMA. Model yang digunakan memiliki tingkat kesalahan (MAPE) sekitar 5% pada data uji, menunjukkan proyeksi cukup akurat untuk skenario perencanaan. Proyeksi ini adalah skenario perencanaan untuk mengantisipasi kebutuhan layanan, bukan angka pasti di masa depan.
                 </p>
-                <div className="mb-6 max-w-2xl mx-auto">
-                  <img
-                    src="/educare2045/gambar-2-forecast.png"
-                    alt="Grafik forecast kasus baru dan kematian kanker payudara di Indonesia 1990–2045"
-                    className="w-full rounded-xl border border-gray-200"
-                  />
-                  <p className="text-xs text-gray-400 mt-2 text-center">
-                    Forecast of Breast Cancer Incidence and Deaths in Indonesia (1990–2045) — IHME-GBD
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  {data.forecast.highlights.map((h) => (
-                    <React.Fragment key={h.year}>
-                      <div className="p-4 rounded-xl bg-cyan-50 border border-cyan-100 text-center">
-                        <p className="text-lg font-bold text-cyan-700">{formatNumber(h.cases)}</p>
-                        <p className="text-xs text-gray-500">kasus baru {h.year}</p>
-                        <p className="text-xs text-rose-500 font-medium">+{h.caseGrowth}%</p>
-                      </div>
-                      <div className="p-4 rounded-xl bg-purple-50 border border-purple-100 text-center">
-                        <p className="text-lg font-bold text-purple-700">{formatNumber(h.deaths)}</p>
-                        <p className="text-xs text-gray-500">kematian {h.year}</p>
-                        <p className="text-xs text-rose-500 font-medium">+{h.deathGrowth}%</p>
-                      </div>
-                    </React.Fragment>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowForecastRange(!showForecastRange)}
-                  aria-expanded={showForecastRange}
-                  className="text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors"
-                >
-                  {showForecastRange ? "Sembunyikan" : "Lihat"} rentang prediksi
-                </button>
-                {showForecastRange && (
-                  <div className="mt-4 space-y-2 animate-slide-up">
-                    {data.forecast.highlights.map((h) => (
-                      <div key={h.year} className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
-                        <span className="font-semibold">{h.year}:</span> Kasus {h.caseRange}, Kematian {h.deathRange}
-                        <span className="text-xs text-gray-400 ml-2">(95% CI)</span>
-                      </div>
-                    ))}
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+                  <div className="lg:col-span-3">
+                    <img
+                      src="/educare2045/gambar-2-forecast.png"
+                      alt="Grafik forecast kasus baru dan kematian kanker payudara di Indonesia 1990–2045"
+                      className="w-full rounded-xl border border-gray-200"
+                    />
+                    <p className="text-xs text-gray-400 mt-2 text-center">
+                      Forecast of Breast Cancer Incidence and Deaths in Indonesia (1990–2045) — IHME
+                    </p>
                   </div>
-                )}
-                <p className="text-xs text-gray-400 mt-4">{data.forecast.note}</p>
+                  <div className="lg:col-span-2 space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      {data.forecast.highlights.map((h) => (
+                        <React.Fragment key={h.year}>
+                          <div className="p-4 rounded-xl bg-cyan-50 border border-cyan-100 text-center">
+                            <p className="text-lg font-bold text-cyan-700">{formatNumber(h.cases)}</p>
+                            <p className="text-xs text-gray-500">kasus baru {h.year}</p>
+                            <p className="text-xs text-rose-500 font-medium">+{h.caseGrowth}%</p>
+                          </div>
+                          <div className="p-4 rounded-xl bg-purple-50 border border-purple-100 text-center">
+                            <p className="text-lg font-bold text-purple-700">{formatNumber(h.deaths)}</p>
+                            <p className="text-xs text-gray-500">kematian {h.year}</p>
+                            <p className="text-xs text-rose-500 font-medium">+{h.deathGrowth}%</p>
+                          </div>
+                        </React.Fragment>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setShowForecastRange(!showForecastRange)}
+                      aria-expanded={showForecastRange}
+                      className="text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors"
+                    >
+                      {showForecastRange ? "Sembunyikan" : "Lihat"} rentang prediksi
+                    </button>
+                    {showForecastRange && (
+                      <div className="space-y-2 animate-slide-up">
+                        {data.forecast.highlights.map((h) => (
+                          <div key={h.year} className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
+                            <span className="font-semibold">{h.year}:</span> Kasus {h.caseRange}, Kematian {h.deathRange}
+                            <span className="text-xs text-gray-400 ml-2">(95% CI)</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-400">{data.forecast.note}</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -293,7 +297,7 @@ export default function EduCarePage() {
                 <div className="px-6 pb-6 animate-slide-up">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>• Snapshot nasional: GLOBOCAN 2022.</li>
-                    <li>• Forecast: hasil pengolahan berdasarkan estimasi historis IHME-GBD.</li>
+                    <li>• Forecast: hasil pengolahan berdasarkan estimasi historis IHME.</li>
                     <li>• Prioritas wilayah: pengolahan incidence rate, death rate, dan capaian SADANIS tingkat provinsi.</li>
                     <li>• Data ditampilkan dalam bentuk agregat dan tidak memuat data pasien.</li>
                   </ul>
