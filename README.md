@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BERSERI — Breast Early Risk Screening Intelligence
 
-## Getting Started
+BERSERI adalah platform deteksi dini kanker payudara berbasis Artificial Intelligence. Frontend ini dibangun dengan Next.js dan terhubung ke backend FastAPI untuk analisis citra USG payudara.
 
-First, run the development server:
+## Fitur
+
+- **Screening Center** — Tenaga kesehatan mengunggah citra USG untuk analisis AI dengan segmentasi lesi dan confidence score.
+- **Patient Track** — Pasien mengakses riwayat pemeriksaan, rekomendasi tindak lanjut, dan jadwal kontrol.
+- **EduCare 2045** — Informasi faktor risiko, tren kasus nasional, prioritas wilayah, dan rekomendasi berbasis data.
+- **Deteksi Cepat** — Upload dan analisis citra mammografi/USG dengan hasil klasifikasi dan visualisasi segmentasi.
+
+## Tech Stack
+
+- **Framework**: Next.js 16
+- **Bahasa**: TypeScript
+- **Styling**: Tailwind CSS
+- **Backend**: FastAPI (Python) — lihat [breastcare-ml](https://github.com/AlthafSyakirMaulana/breastcare-ml)
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Pastikan backend berjalan di `http://localhost:8000` atau atur `NEXT_PUBLIC_API_URL`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+Frontend di-deploy ke Vercel. Backend API di Hugging Face Docker Space.
 
-To learn more about Next.js, take a look at the following resources:
+## Catatan Penting
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+BERSERI adalah purwarupa pendukung skrining. Hasil analisis bukan diagnosis medis resmi dan harus ditinjau oleh tenaga kesehatan.
