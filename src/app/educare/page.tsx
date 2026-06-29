@@ -48,9 +48,6 @@ export default function EduCarePage() {
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">
                 <span className="gradient-text">EduCare</span>
               </h1>
-              <p className="text-gray-500 max-w-2xl mx-auto">
-                Memahami beban kanker payudara, prioritas wilayah, dan pentingnya deteksi dini menuju Indonesia 2045.
-              </p>
             </div>
 
             {/* Stat Cards */}
@@ -67,18 +64,12 @@ export default function EduCarePage() {
                 <p className="text-3xl font-bold gradient-text">~{data.nationalSnapshot2022.lateStageDiagnosisPercent}%</p>
                 <p className="text-sm text-gray-500 mt-1">pasien terdiagnosis pada stadium lanjut</p>
               </div>
-              <div className="md:col-span-3 text-center">
-                <span className="text-xs text-gray-400">Snapshot nasional — {data.nationalSnapshot2022.source}</span>
-              </div>
             </div>
 
             {/* 2. FORECAST */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-10 animate-slide-up stagger-2">
               <div className="p-6 sm:p-8">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Forecast Menuju 2045</h2>
-                <p className="text-sm text-gray-500 mb-4">
-                  Berdasarkan data historis IHME (1990–2023), tim EduCare memproyeksikan jumlah kasus baru dan kematian hingga 2045 menggunakan model ARIMA. Model yang digunakan memiliki tingkat kesalahan (MAPE) sekitar 5% pada data uji, menunjukkan proyeksi cukup akurat untuk skenario perencanaan. Proyeksi ini adalah skenario perencanaan untuk mengantisipasi kebutuhan layanan, bukan angka pasti di masa depan.
-                </p>
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
                   <div className="lg:col-span-3">
                     <img
@@ -87,7 +78,7 @@ export default function EduCarePage() {
                       className="w-full rounded-xl border border-gray-200"
                     />
                     <p className="text-xs text-gray-400 mt-2 text-center">
-                      Forecast of Breast Cancer Incidence and Deaths in Indonesia (1990–2045) — IHME
+                      Forecast of Breast Cancer Incidence and Deaths in Indonesia (1990–2045) — IHME-GBD
                     </p>
                   </div>
                   <div className="lg:col-span-2 space-y-4">
@@ -297,7 +288,7 @@ export default function EduCarePage() {
                 <div className="px-6 pb-6 animate-slide-up">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>• Snapshot nasional: GLOBOCAN 2022.</li>
-                    <li>• Forecast: hasil pengolahan berdasarkan estimasi historis IHME.</li>
+                    <li>• Forecast: hasil pengolahan berdasarkan estimasi historis IHME-GBD.</li>
                     <li>• Prioritas wilayah: pengolahan incidence rate, death rate, dan capaian SADANIS tingkat provinsi.</li>
                     <li>• Data ditampilkan dalam bentuk agregat dan tidak memuat data pasien.</li>
                   </ul>
