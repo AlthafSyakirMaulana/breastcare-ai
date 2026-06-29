@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# project assets (source files, not public)
+gambar_buatEduCare/
+essai_sementara/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
