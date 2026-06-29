@@ -46,13 +46,10 @@ export default function EduCarePage() {
                 Edukasi & Analitik
               </div>
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-                <span className="gradient-text">EduCare 2045</span>
+                <span className="gradient-text">EduCare</span>
               </h1>
               <p className="text-gray-500 max-w-2xl mx-auto">
                 Memahami beban kanker payudara, prioritas wilayah, dan pentingnya deteksi dini menuju Indonesia 2045.
-              </p>
-              <p className="text-xs text-gray-400 mt-3 max-w-xl mx-auto">
-                Halaman ini menyajikan hasil analisis data nasional yang menjadi dasar pengembangan BERSERI — mulai dari proyeksi beban kasus, pemetaan wilayah prioritas, hingga identifikasi faktor risiko — untuk mendukung perencanaan layanan yang lebih terarah.
               </p>
             </div>
 

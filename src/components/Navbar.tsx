@@ -30,7 +30,7 @@ export default function Navbar() {
               Patient Track
             </Link>
             <Link href="/educare" className="text-sm font-medium text-gray-600 hover:text-pink-500 transition-colors">
-              EduCare 2045
+              EduCare
             </Link>
             <Link
               href="/detect"
@@ -67,7 +67,7 @@ export default function Navbar() {
                 Patient Track
               </Link>
               <Link href="/educare" className="text-sm font-medium text-gray-600 hover:text-pink-500 px-3 py-2 rounded-lg hover:bg-pink-50" onClick={() => setMobileOpen(false)}>
-                EduCare 2045
+                EduCare
               </Link>
               <Link
                 href="/detect"
